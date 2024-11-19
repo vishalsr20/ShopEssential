@@ -1,4 +1,6 @@
-const host = "http://localhost:3000"
+
+const host = import.meta.env.VITE_BACKEND_URL;
+
 
 export const SignupRoutes = `${host}/api/auth/signup`
 export const LoginRoutes = `${host}/api/auth/login`
