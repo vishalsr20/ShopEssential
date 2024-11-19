@@ -8,16 +8,7 @@ router.post('/signup',signup)
 router.post('/login',login)
 router.post('/feedback',feedback)
 router.get('/products',getProduct)
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, 'uploads/'); // Store files in 'uploads' folder
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, Date.now() + path.extname(file.originalname)); // Unique file name
-//     }
-// });
 
-// Initialize multer with storage configuration
 
 router.post('/createproduct', upload.single('image'), shopNow)
 router.delete('/delete/:id',deleteProduct)
