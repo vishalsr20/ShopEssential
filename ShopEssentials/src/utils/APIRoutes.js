@@ -1,5 +1,5 @@
 
-const host = "https://shopessential-backend.onrender.com"
+const host = import.meta.env.VITE_BACKEND_URL;
 
 
 export const SignupRoutes = `${host}/api/auth/signup`
