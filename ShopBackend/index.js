@@ -17,7 +17,9 @@ app.use(bodyParser.json({ limit: "10mb" })); // Change "10mb" to your desired li
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use('/uploads', express.static(path.join(__dirname,  'upload')));
 
-
+app.get("/",(req,res) => {
+    res.send("Welcome to Dashboard")
+})
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
