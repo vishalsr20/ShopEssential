@@ -13,7 +13,7 @@ app.use(
 
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://shop-essential-sxmu.vercel.app",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
