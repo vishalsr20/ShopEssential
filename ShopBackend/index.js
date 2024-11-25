@@ -13,7 +13,7 @@ app.use(
 
 
 app.use(cors({
-  origin: "https://shop-essential-sxmu.vercel.app",
+  origin: ["https://shop-essential-sxmu.vercel.app","https://shopessential-fronted.onrender.com],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -39,10 +39,7 @@ cloudinary.config({
 
 app.use(express.json())
 app.use("/api/auth",userRoutes)
-mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser :true,
-    useUnifiedTopology:true
-})
+mongoose.connect(process.env.MONGO_URL)
 .then(() => console.log( 
 
     "Mongodb connected successfully"))
