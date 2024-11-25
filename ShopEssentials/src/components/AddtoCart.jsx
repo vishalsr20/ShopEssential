@@ -47,7 +47,7 @@ const AddtoCart = ({ cartItems, setCartItems, cartCount, setcartCount, setIslogg
         ) : (
           cartItems.map((item) => (
             <div key={item.id} className="bg-slate-400 rounded-lg p-4 flex flex-col items-center shadow-lg transition-transform duration-300 transform hover:scale-105">
-              <img src={Shoes} alt={item.name} className="w-full h-48 object-cover rounded-md" />
+              <img src={item.image} alt={item.name} className="w-full h-48 object-cover rounded-md" />
               <h3 className="mt-4 text-xl font-semibold">{item.name}</h3>
               <p className="mt-2 text-gray-700">{item.description}</p>
               <p className="mt-2 font-semibold text-lg">Rs {item.price}</p>
