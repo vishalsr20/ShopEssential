@@ -8,7 +8,7 @@ const Dashboard = ({ setIsloggedIn, cartCount, onAddToCart, isLoggedIn }) => {
     <div className="font-serif w-[100vw] flex flex-col items-center justify-center">
 
       {/* Animated welcome text */}
-      <div className="mt-20 text-4xl font-bold relative overflow-hidden h-16">
+      <div className="mt-20 text-4xl font-bold relative overflow-hidden ">
         <span className="animate-marquee inline-block text-purple-600">
           Welcome to Dashboard - Let's Get Started 🚀
         </span>
