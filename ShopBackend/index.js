@@ -13,7 +13,7 @@ app.use(
 
 
 app.use(cors({
-  origin: ["https://shop-essential-sxmu.vercel.app","https://shopessential-fronted.onrender.com],
+  origin: ["https://shop-essential-sxmu.vercel.app","https://shopessential-fronted.onrender.com"],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
