@@ -41,12 +41,12 @@ const Card = ({ setIsloggedIn, cartCount, onAddToCart, isLoggedIn }) => {
 
     <>
     
-    <div className="p-4">
+    <div className="">
       {
         isLoading ? (<div
         className="text-6xl  text-green-600 font-bold"
         >Loading Please Wait ...</div>) : 
-        (      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        (      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 p-6  gap-6">
           {products.map((product) => (
             <div
               key={product.id}
