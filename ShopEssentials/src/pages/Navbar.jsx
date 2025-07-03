@@ -1,145 +1,122 @@
 import { useState } from "react";
-import logo from "../assets/Shopping-logo.webp";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import logo from "../assets/Shopping-logo.webp";
 import cart from "../assets/cart-148964_1920.png";
+import { FiMenu } from "react-icons/fi";
+import { toast } from "react-toastify";
 
-const Navbar = (props) => {
+const Navbar = ({ cartCount, isLoggedIn, setIsloggedIn }) => {
   const navigate = useNavigate();
-  const { cartCount } = props;
-  let isLoggedIn = props.isLoggedIn;
-  let setIsloggedIn = props.setIsloggedIn;
   const [isOpen, setIsOpen] = useState(false);
 
-  function toggleMenu() {
-    setIsOpen(!isOpen);
-  }
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const handleLogout = () => {
+    setIsloggedIn(false);
+    toast.success("Logged out successfully");
+    navigate("/login");
+  };
 
   return (
-    <nav className="bg-gray-800 text-white fixed top-0 left-0 w-full z-10 shadow-lg">
-      <div className="w-full">
-      <div className="flex  justify-between items-center h-14 bg-slate-950 text-white px-4 sm:px-8 md:px-12">
-        {/* Logo and Title */}
-        <div className="flex items-center gap-4">
-          <img src={logo} alt="Logo" width={40} />
-          <Link to="/" className="font-bold text-xl">
-            ShopEssential
+    <nav className="bg-[#020617] overflow-y-hidden w-screen  text-white fixed top-0 left-0  z-50 shadow-md">
+      <div className="flex justify-between  items-center h-12 px-4 sm:px-8 md:px-12">
+        {/* Logo + Title */}
+        <div className="flex items-center gap-3">
+          <img src={logo} alt="Logo" className="w-10 h-auto" />
+          <Link to="/" className="text-xl font-bold tracking-wide">
+            Shop<span className="text-green-400">Essential</span>
           </Link>
         </div>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex gap-6">
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
-          <Link to="/adminlogin"> Admin login</Link>
-        </div>
-
-        {/* Cart and User Authentication */}
-        <div className="flex gap-4 items-center">
+        {/* Right Side - Buttons */}
+        <div className="hidden md:flex gap-3 items-center">
           <Link
             to="/addtocart"
-            className="flex items-center gap-1 bg-green-500 text-white px-3 py-2 rounded-sm hover:bg-green-400 transition-all duration-200 ease-in-out"
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-500 px-3 py-2 rounded transition"
           >
-            <img src={cart} alt="cart" width={20} />
+            <img src={cart} alt="Cart" className="w-5 h-5" />
             <span>{cartCount}</span>
           </Link>
 
-          {/* Conditional Rendering for Login/Signup/Logout */}
-          {!isLoggedIn && (
+          {!isLoggedIn ? (
             <>
               <Link to="/login">
-                <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all">
+                <button className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded transition">
                   Login
                 </button>
               </Link>
-
               <Link to="/signup">
-                <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-all">
+                <button className="bg-gray-100 text-black hover:bg-gray-200 px-4 py-2 rounded transition">
                   Signup
                 </button>
               </Link>
             </>
-          )}
-
-          {isLoggedIn && (
+          ) : (
             <>
               <Link to="/dashboard">
-                <button className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition-all">
+                <button className="bg-yellow-500 hover:bg-yellow-400 px-4 py-2 rounded transition">
                   Dashboard
                 </button>
               </Link>
-
-              <Link to="/">
-                <button
-                  className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-all"
-                  onClick={() => {
-                    
-                    navigate("/login")
-                    
-                    setIsloggedIn(false);
-                  }}
-                >
-                  Logout
-                </button>
-              </Link>
+              <button
+                onClick={handleLogout}
+                className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded transition"
+              >
+                Logout
+              </button>
             </>
           )}
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Icon */}
         <button
-          className="md:hidden text-white"
+          className="md:hidden text-white focus:outline-none"
           onClick={toggleMenu}
+          aria-label="Toggle Menu"
         >
-          <span className="text-2xl">&#9776;</span>
+          <FiMenu className="text-2xl" />
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Dropdown */}
       {isOpen && (
-        <div className="md:hidden bg-gray-800 text-white absolute top-14 left-0 w-full p-4 z-40">
-          <ul className="flex flex-col gap-4">
-            <Link to="/" onClick={toggleMenu}>
-              Home
-            </Link>
-            <Link to="/about" onClick={toggleMenu}>
-              About
-            </Link>
-            <Link to="/contact" onClick={toggleMenu}>
-              Contact
-            </Link>
-            {!isLoggedIn && (
-              <>
-                <Link to="/login" onClick={toggleMenu}>
-                  Login
-                </Link>
-                <Link to="/signup" onClick={toggleMenu}>
-                  Signup
-                </Link>
-              </>
-            )}
-            {isLoggedIn && (
-              <>
-                <Link to="/dashboard" onClick={toggleMenu}>
-                  Dashboard
-                </Link>
-                <Link to="/" onClick={() => {
-                
-                  setIsloggedIn(false);
+        <div className="md:hidden bg-slate-800 text-white w-full px-6 py-4 flex flex-col gap-4 transition-all duration-300">
+          <Link to="/" onClick={toggleMenu}>
+            Home
+          </Link>
+          <Link to="/about" onClick={toggleMenu}>
+            About
+          </Link>
+          <Link to="/contact" onClick={toggleMenu}>
+            Contact
+          </Link>
+
+          {!isLoggedIn ? (
+            <>
+              <Link to="/login" onClick={toggleMenu}>
+                Login
+              </Link>
+              <Link to="/signup" onClick={toggleMenu}>
+                Signup
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/dashboard" onClick={toggleMenu}>
+                Dashboard
+              </Link>
+              <button
+                onClick={() => {
+                  handleLogout();
                   toggleMenu();
-                }}>
-                  Logout
-                </Link>
-              </>
-            )}
-          </ul>
+                }}
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
       )}
-
-      <ToastContainer />
-    </div>
     </nav>
   );
 };
