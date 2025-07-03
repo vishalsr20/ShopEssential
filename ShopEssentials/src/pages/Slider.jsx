@@ -67,7 +67,7 @@ const Slider = ({ isLoggedIn, setIsloggedIn }) => {
       </Carousel>
       <ToastContainer />
     </div>
-    <Dashboard/>
+  
   </div>
   );
 };
