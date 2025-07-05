@@ -1,7 +1,8 @@
 import { useState } from "react";
 import logo from "../assets/Shopping-logo.webp";
+import loginImage from "../assets/login2.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import { FaRegEye, FaEyeSlash } from "react-icons/fa";
+import { FaRegEye, FaEyeSlash, FaGoogle, FaFacebookF } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
@@ -52,11 +53,8 @@ const Signup = ({ setIsloggedIn, isLoggedIn }) => {
 
   const handleValidation = () => {
     const { name, email, password, confirmPassword } = values;
-    if (name === "") {
+    if (!name || !email || !password || !confirmPassword) {
       toast.error("Please fill in all fields");
-      return false;
-    } else if (email === "") {
-      toast.error("Please provide an email");
       return false;
     } else if (password !== confirmPassword) {
       toast.error("Passwords do not match");
@@ -66,91 +64,124 @@ const Signup = ({ setIsloggedIn, isLoggedIn }) => {
   };
 
   return (
-    <div className="flex justify-center items-center bg-slate-900 h-screen">
-      <div className="w-[420px] bg-slate-800 p-6 rounded-xl shadow-lg">
-        <form onSubmit={submitHandler} className="space-y-4">
-          {/* Logo and Header */}
-          <div className="flex justify-center items-center gap-2 mb-4">
-            <img src={logo} alt="Logo" className="w-8" />
-            <h1 className="text-2xl text-white font-semibold">Sign Up</h1>
+    <div className="h-screen bg-gray-300 flex items-center mt-6 justify-center px-4 py-10">
+      <div className="w-full max-w-4xl h-auto flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-2xl bg-white">
+
+        {/* Left Side - Hidden on small screens */}
+        <div
+          className="hidden md:flex w-1/2 relative bg-cover bg-center flex-col px-6 py-10 justify-between"
+          style={{ backgroundImage: `url(${loginImage})` }}
+        >
+          <div className="absolute inset-0 bg-black bg-opacity-60 z-0 rounded-l-2xl"></div>
+
+          {/* Logo on top-left */}
+          <div className="relative z-10 flex items-center gap-3">
+            <img src={logo} alt="Logo" className="w-10 h-10" />
+            <h1 className="text-white text-xl font-semibold">Shop Essential</h1>
           </div>
 
-          {/* Name Input */}
-          <div>
-            <input
-              type="text"
-              placeholder="Enter your name"
-              name="name"
-              value={values.name}
-              onChange={ChangeHandler}
-              className="w-full p-3 bg-slate-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
+          {/* Message in center */}
+          <div className="relative z-10 text-center space-y-4 mt-auto mb-auto">
+            <h2 className="text-3xl font-bold text-yellow-400">
+              Simplify your shopping
+            </h2>
+            <p className="text-sm text-gray-200 max-w-xs mx-auto">
+              Fast, secure, and smart — manage your account and shop with ease.
+            </p>
           </div>
+        </div>
 
-          {/* Email Input */}
-          <div>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              name="email"
-              value={values.email}
-              onChange={ChangeHandler}
-              className="w-full p-3 bg-slate-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
+        {/* Right Side */}
+        <div className="w-full md:w-1/2 bg-[#1f2937] text-white flex items-center justify-center px-6 py-10">
+          <div className="w-full max-w-sm">
 
-          {/* Password Input */}
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              name="password"
-              value={values.password}
-              onChange={ChangeHandler}
-              className="w-full p-3 bg-slate-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-            <span
-              className="absolute right-3 top-3 cursor-pointer"
-              onClick={togglePassword}
-            >
-              {showPassword ? (
-                <FaRegEye className="text-white" />
-              ) : (
-                <FaEyeSlash className="text-white" />
-              )}
-            </span>
-          </div>
+            {/* Heading */}
+            <div className="flex flex-col items-center gap-2 mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-white">Sign Up</h2>
+              <p className="text-sm text-gray-400 font-medium">
+                Create your new account
+              </p>
+            </div>
 
-          {/* Confirm Password Input */}
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Confirm your password"
-              name="confirmPassword"
-              value={values.confirmPassword}
-              onChange={ChangeHandler}
-              className="w-full p-3 bg-slate-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
+            {/* Form */}
+            <form onSubmit={submitHandler} className="space-y-5">
+              <input
+                type="text"
+                name="name"
+                value={values.name}
+                onChange={ChangeHandler}
+                placeholder="Name"
+                className="w-full px-4 py-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-gray-400"
+              />
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full p-3 bg-green-600 text-white rounded-md hover:bg-green-500 transition-all"
-          >
-            Sign Up
-          </button>
+              <input
+                type="email"
+                name="email"
+                value={values.email}
+                onChange={ChangeHandler}
+                placeholder="Email"
+                className="w-full px-4 py-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-gray-400"
+              />
 
-          {/* Already have an account */}
-          <div className="text-center text-white">
-            <p>
-              Have an account?{" "}
-              <Link to="/login" className="text-green-500 hover:underline">
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={values.password}
+                  onChange={ChangeHandler}
+                  placeholder="Password"
+                  className="w-full px-4 py-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-gray-400"
+                />
+                <span
+                  className="absolute right-4 top-3.5 text-yellow-400 cursor-pointer"
+                  onClick={togglePassword}
+                >
+                  {showPassword ? <FaRegEye /> : <FaEyeSlash />}
+                </span>
+              </div>
+
+              <input
+                type={showPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={values.confirmPassword}
+                onChange={ChangeHandler}
+                placeholder="Confirm Password"
+                className="w-full px-4 py-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-gray-400"
+              />
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-yellow-400 text-black font-semibold text-sm rounded-lg hover:bg-yellow-300 transition-all"
+              >
+                Sign Up
+              </button>
+            </form>
+
+            {/* Social Buttons */}
+            <div className="flex gap-3 justify-center mt-5 w-full">
+              <button className="flex items-center w-full justify-center gap-2 bg-yellow-400 text-black px-5 py-2 rounded-md font-semibold shadow-md hover:scale-105 hover:shadow-yellow-300 transition">
+                <FaGoogle className="text-lg" />
+                <span className="text-sm font-medium"> Google</span>
+              </button>
+
+              <button className="flex items-center w-full justify-center gap-2 bg-yellow-400 text-black px-5 py-2 rounded-md font-semibold shadow-md hover:scale-105 hover:shadow-yellow-300 transition">
+                <FaFacebookF className="text-lg" />
+                <span className="text-sm font-medium"> Facebook</span>
+              </button>
+            </div>
+
+            {/* Login Link */}
+            <p className="mt-6 text-sm text-center text-gray-400">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-yellow-400 font-medium hover:underline"
+              >
                 Login
               </Link>
             </p>
           </div>
-        </form>
+        </div>
       </div>
 
       <ToastContainer />
