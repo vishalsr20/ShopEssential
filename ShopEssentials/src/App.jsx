@@ -14,6 +14,8 @@ import AddtoCart from "./components/AddtoCart"
 import CreateProduct from "./pages/CreateProduct"
 import OrderSuccessfully from "./pages/OrderSuccessfully"
 import OrderPlaced from "./components/OrderPlaced"
+import ForgottenPassword from "./pages/ForgottenPassword"
+
 
 function App() {
 
@@ -65,6 +67,7 @@ function App() {
         <Route path="/createproduct"  element={<CreateProduct/>} />
         <Route path="/ordersuccessfully" element={<OrderSuccessfully/>} />
         <Route path="/orderplaced" element={<OrderPlaced/>}/>
+        <Route  path="password" element={<ForgottenPassword/>}/>
        </Routes>
        </BrowserRouter>
       </div>
