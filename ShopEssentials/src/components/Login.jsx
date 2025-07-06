@@ -9,6 +9,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { Eye, EyeOff } from "lucide-react";
 import { FaGoogle, FaFacebookF } from "react-icons/fa";
 
+
+
+
 const Login = ({ setIsloggedIn }) => {
   const navigate = useNavigate();
   const [values, setValues] = useState({ email: "", password: "" });
@@ -134,7 +137,7 @@ const Login = ({ setIsloggedIn }) => {
           </div>
 
           <div className="text-right text-sm text-yellow-400 hover:underline cursor-pointer">
-            <Link to="/forgot-password">Forgot Password?</Link>
+            <Link to="/password">Forgot Password?</Link>
           </div>
 
           <button
