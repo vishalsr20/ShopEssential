@@ -1,79 +1,90 @@
-import { FetchProductsRoutes } from "../utils/APIRoutes";
-import { useState, useEffect } from "react";
+import { FetchProductsRoutes, DeleteProductRoutes } from "../utils/APIRoutes";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { DeleteProductRoutes } from "../utils/APIRoutes";
-import { toast, ToastContainer } from 'react-toastify';
-const Admin = () => {
-  const [products, setProduct] = useState([]);
+import { toast, ToastContainer } from "react-toastify";
 
+const Admin = () => {
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch products with pagination
+  const fetchProducts = useCallback(async () => {
+    if (isLoading || page > totalPages) return;
+
+    setIsLoading(true);
+    try {
+      const res = await axios.get(`${FetchProductsRoutes}?page=${page}&limit=10`);
+      const newProducts = res.data.products || res.data;
+      setProducts((prev) => [...prev, ...newProducts]);
+      setTotalPages(res.data.totalPages || 1);
+      setPage((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      toast.error("Failed to load products");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [page, totalPages, isLoading]);
+
+  // Initial load
   useEffect(() => {
-    axios
-      .get(FetchProductsRoutes)
-      .then((response) => {
-        console.log("API Response", response.data);
-        setProduct(response.data);
-      })
-      .catch((error) => {
-        console.log("Error while fetching product", error);
-      });
+    fetchProducts();
   }, []);
 
-  const deleteHandler =async (productid) => {
-    axios.delete(`${DeleteProductRoutes}/${productid}`)
-    .then( () => {
-      setProduct(products.filter( (product) => product.id !== productid))
-      console.log("Product deleted successfully")
-      toast.success("Product deleted successfully")
-      
-    })
-    .catch( (error) => {
-      console.log("Error while deleting product",error)
-    })
-  }
+  // Scroll listener for infinite scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
+      if (nearBottom && !isLoading && page <= totalPages) {
+        fetchProducts();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [fetchProducts, isLoading, page, totalPages]);
+
+  // Delete product
+  const deleteHandler = async (productId) => {
+    try {
+      await axios.delete(`${DeleteProductRoutes}/${productId}`);
+      toast.success("Product deleted successfully");
+      setProducts((prev) => prev.filter((p) => p._id !== productId));
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Failed to delete product");
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 mt-10">
       <h1 className="text-3xl font-bold text-center mb-8">Admin Dashboard</h1>
+
       <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {products.map((product) => (
           <div
-            key={product.id}
-            className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:scale-105 transform transition-all duration-300 ease-in-out"
+            key={product._id}
+            className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow-lg hover:scale-105 transition-all duration-300 ease-in-out"
           >
-            {/* Product Image */}
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-48 object-cover rounded-t-lg"
-            />
-
-            {/* Product Name and Description */}
+            <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded-t-lg" />
             <div className="p-4 text-center w-full">
               <h2 className="text-xl font-semibold text-gray-800">{product.name}</h2>
               <p className="text-sm text-gray-500 mt-2">
-                
-                {
-                  product.description.length > 100  ? ( `${product.description.slice(0,75)}...`) : ( product.description)
-                }
-               
-                
-                </p>
-
-              {/* Price and Discount */}
+                {product.description.length > 100
+                  ? `${product.description.slice(0, 75)}...`
+                  : product.description}
+              </p>
               <div className="mt-4 flex flex-col items-center">
-                <p className="text-lg font-bold text-gray-900">
-                  Rs {product.price}{" "}
-                  <span className="text-sm text-gray-500 line-through">
-                  
-                  </span>
+                <p className="text-lg font-bold text-gray-900">Rs {product.price}</p>
+                <p className="text-green-600 text-sm mt-1 line-through font-semibold">
+                  Rs {product.discount}
                 </p>
-                <p className="text-green-600 text-sm mt-1 line-through   text-bold ">Rs {product.discount}</p>
               </div>
-
-              {/* Delete Button */}
               <div className="flex justify-center mt-4">
                 <button
-                onClick={ () => deleteHandler(product._id)}
+                  onClick={() => deleteHandler(product._id)}
                   className="w-full py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
                 >
                   Delete Product
@@ -83,7 +94,16 @@ const Admin = () => {
           </div>
         ))}
       </div>
-      <ToastContainer/>
+
+      {isLoading && (
+        <p className="text-center text-green-600 text-lg mt-6">Loading more products...</p>
+      )}
+
+      {page > totalPages && (
+        <p className="text-center text-gray-500 text-sm mt-4">All products loaded.</p>
+      )}
+
+      <ToastContainer />
     </div>
   );
 };
