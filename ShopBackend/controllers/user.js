@@ -241,16 +241,30 @@ module.exports.shopNow = async (req, res, next) => {
 
 
 
+
 module.exports.getProduct = async (req, res, next) => {
-    try{
-        const products =await shoporder.find()
-        res.json(products)
-    }catch(error){
-        res.status(500).json({
-            message:"Error in fetching"
-        })
-    }
-}
+  try {
+    const page = parseInt(req.query.page) || 1;      // default page 1
+    const limit = parseInt(req.query.limit) || 10;   // default 10 items per page
+    const skip = (page - 1) * limit;
+
+    const products = await shoporder.find().skip(skip).limit(limit);
+
+    const total = await shoporder.countDocuments();
+
+    res.json({
+      products,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error in fetching products",
+    });
+  }
+};
+
 
 module.exports.deleteProduct = async (req, res, next) => {
     try {
